@@ -110,7 +110,8 @@ We are interested about how many videos have we watched every time during our fr
 
 # Pick up the amount of videos when we watched the most videos on YouTube
 paste("From the survey, the highest number of videos watched during the survey submitter's latest use was",
-      max(latest_data$Video_viewed_number))
+      max(latest_data$Video_viewed_number)
+)
 
 ```
 
