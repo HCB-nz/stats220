@@ -1,0 +1,135 @@
+---
+title: My dynamic report
+output: html_fragment
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+
+```
+
+```{css}
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap');
+
+body {
+  background-color: #9EC8FF;
+  font-family: 'Roboto Slab';
+  padding: 12px;
+}
+
+h2 {
+  color: #0D76B5;
+  font-weight: bold;
+  margin-top: 40px;
+}
+
+code {
+  font-family: 'Roboto Slab';
+  padding: 12px
+}
+
+```
+
+## What's going on with this data
+
+The data are comes from the survey filled up by me and my friends. We submit the information about how we view YouTube every time.
+
+In the survey, we collected the age of the submitter to distinguish who submit the data. We also collect the time spend on YouTube, how many video viewed and whether have watched a video from the submitters' subscription list or not.
+
+We are interested will we certainly watch at least a video from our subscription as we watch more videos and spend more time on YouTube (Will these be connected). Also, we like to know even though we have to go to university everyday but during our free time, what is the maximum number of videos we can watch every time and how many we watch on average? (Helps us to know whether this influence our study)
+
+```{r}
+
+library(tidyverse)
+
+# The URL of my Google sheet published as a CSV
+csv_file <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vRpdzbH-J25XzGn-4ljejUY4Q_dXkhC9hMiMAbDmwqrW7s5SgN18m5DdYC3GD4RGPmw_5DrXAQWMlmW/pub?gid=1942650604&single=true&output=csv"
+
+# read and save my data in the CSV as logged_data
+logged_data <- read_csv(csv_file)
+
+# Rename the data to be latest_data and rename every sections
+latest_data <- logged_data %>%
+# Give every sections in the survey another easier name
+  rename(Time = 1,
+         Age = 2,
+         Video_viewed_number = 3,
+         View_time = 4,
+         Subscribed_view = 5,
+)
+
+```
+
+## Graph compare number of video watched and subscribed or not
+In this graph, we compare the number of video we watched during the use on y-axis to whether we view someone we already subscribed with different colours: No for red and Yes for cyan. And on the x-axis labels the number of times for we watched this amount of videos.
+
+As the graph shown, there is not a very obvious relationship between these two variables. Whether we watch someone we already subscribed or not didn't become guarantee with high or low number of videos viewed.
+
+```{r}
+
+# The Bar chart compare the number of videos we watched on YouTube and whether watch someone we subscribed or not
+ggplot( data = latest_data ) +
+  geom_bar(aes(y = Video_viewed_number, fill = Subscribed_view)) +
+  
+# Label the bar chart
+labs(title = "More videos guarantee from subscription list?",
+     subtitle = "Compare number of video watched and subscribed or not from me and my friends' history",
+     caption = "Source: YouTube",
+     y = "Number of video viewed",
+     x = "Number of times"
+)    
+
+```
+
+## Graph compare time spend and subscribed or not
+In this graph, we compare the time spend on YouTube every time (in hours) on x-axis and whether we view someone we already subscribed with different colours as well: Red for No, cyan for Yes. And on the y-axis is also the number of times for we spend this many hours
+
+As the graph shown, most times we spend 1-2 hours on YouTube and as the time gets longer, there is less part of red colour which indicates more chance watch someone we already subscribed. This indicates there probably have a positive relationships.
+
+```{r}
+
+# The Bar chart compare the time we spend on YouTube and whether view someone subscribed or not
+ggplot( data = latest_data ) +
+  geom_bar(aes(x = View_time, fill = Subscribed_view)) +
+# Label the bar chart
+labs(title = "Longer time guarantee from subscription list?",
+     subtitle = "Compare time spend on Youtube and subscribed or not from me and my friends' history",
+     caption = "Source: YouTube",
+     x = "Time spend in hours",
+     y = "Number of times"
+)
+
+```
+
+## Largest number of videos watched
+
+We are interested about how many videos have we watched every time during our free time without noticing before. And here is our result:
+
+```{r}
+
+# Pick up the amount of videos when we watched the most videos on YouTube
+paste("From the survey, the highest number of videos watched during the survey submitter's latest use was",
+      max(latest_data$Video_viewed_number))
+
+```
+
+## Average mean number of video watched
+
+We also want to find the average amount of videos we watched every time, we calculated with the mean and here is the result:
+
+```{r}
+
+# Calculate the mean amount of videos when we are watching videos on YouTube
+paste0("From the survey, the mean number of video watched during the survey submitter's latest use was about ",
+      mean(latest_data$Video_viewed_number) %>%
+      # Show two decimal places
+        round(2),
+      ". Which can be rounded to ",
+      mean(latest_data$Video_viewed_number) %>% 
+      # Round up to the closet whole number
+      round(0),
+      " as a whole number."
+)
+
+```
