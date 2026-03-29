@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap');
 
 body {
-  background-color: #9EC8FF;
+  background-color: #DEEDFF;
   font-family: 'Roboto Slab';
   padding: 12px;
 }
@@ -66,7 +66,7 @@ In this graph, we compare the number of video we watched during the use on y-axi
 
 As the graph shown, there is not a very obvious relationship between these two variables. Whether we watch someone we already subscribed or not didn't become guarantee with high or low number of videos viewed.
 
-```{r}
+```{r fig.width = 10, fig.height = 4}
 
 # The Bar chart compare the number of videos we watched on YouTube and whether watch someone we subscribed or not
 ggplot( data = latest_data ) +
@@ -85,9 +85,9 @@ labs(title = "More videos guarantee from subscription list?",
 ## Graph compare time spend and subscribed or not
 In this graph, we compare the time spend on YouTube every time (in hours) on x-axis and whether we view someone we already subscribed with different colours as well: Red for No, cyan for Yes. And on the y-axis is also the number of times for we spend this many hours
 
-As the graph shown, most times we spend 1-2 hours on YouTube and as the time gets longer, there is less part of red colour which indicates more chance watch someone we already subscribed. This indicates there probably have a positive relationships.
+As the graph shown, most times we spend 1-2 hours on YouTube and as the time gets longer, there is less part of red colour which indicates more chance watch someone we already subscribed. This indicates there probably have a positive relationships. However, this also requires larger amount of data and different groups of people. Only have about 20 data can't provide strong relationships.
 
-```{r}
+```{r fig.width = 10, fig.height = 6}
 
 # The Bar chart compare the time we spend on YouTube and whether view someone subscribed or not
 ggplot( data = latest_data ) +
@@ -104,33 +104,31 @@ labs(title = "Longer time guarantee from subscription list?",
 
 ## Largest number of videos watched
 
-We are interested about how many videos have we watched every time during our free time without noticing before. And here is our result:
-
 ```{r}
 
 # Pick up the amount of videos when we watched the most videos on YouTube
-paste("From the survey, the highest number of videos watched during the survey submitter's latest use was",
-      max(latest_data$Video_viewed_number)
-)
+max_num <- max(latest_data$Video_viewed_number)
 
 ```
 
-## Average mean number of video watched
+We are interested about how many videos have we watched every time during our free time without noticing before. And here is our result:
 
-We also want to find the average amount of videos we watched every time, we calculated with the mean and here is the result:
+From the survey, the highest amount of the videos we watched at our free time every time was `r max_num`
+
+## Average mean number of video watched
 
 ```{r}
 
 # Calculate the mean amount of videos when we are watching videos on YouTube
-paste0("From the survey, the mean number of video watched during the survey submitter's latest use was about ",
-      mean(latest_data$Video_viewed_number) %>%
+mean_num <- mean(latest_data$Video_viewed_number) %>%
       # Show two decimal places
-        round(2),
-      ". Which can be rounded to ",
-      mean(latest_data$Video_viewed_number) %>% 
-      # Round up to the closet whole number
-      round(0),
-      " as a whole number."
-)
+  round(2)
 
+whole_mean <- mean(latest_data$Video_viewed_number) %>%
+      # Round to whole number
+  round(0)
 ```
+
+We also want to find the average amount of videos we watched every time, we calculated the average with the mean and here is the result:
+
+From the survey, the mean amount for the videos we watched at our free time every time was about `r mean_num` videos which can be rounded to a whole number of `r whole_mean`.
